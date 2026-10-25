@@ -90,13 +90,12 @@
     <div id="instaModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 hidden flex justify-center items-center p-4">
         <div class="bg-black border border-zinc-800 w-full max-w-[420px] rounded-2xl overflow-hidden shadow-2xl text-white flex flex-col max-h-[90vh]">
             
-            <!-- Insta Header -->
+            <!-- Insta Header (photo2.jpg 적용 완료) -->
             <div class="p-3.5 border-b border-zinc-800 flex justify-between items-center bg-black">
                 <div class="flex items-center space-x-2.5">
                     <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 p-[2px]">
-                        <div class="w-full h-full bg-black rounded-full flex items-center justify-center">
-                            <i class="fa-solid fa-crown text-amber-400 text-xs"></i>
-                        </div>
+                        <img src="photo2.jpg" alt="프로필 사진" class="w-full h-full object-cover rounded-full bg-zinc-900" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/100x100/18181b/ffffff?text=photo2';">
                     </div>
                     <div>
                         <div class="flex items-center space-x-1">
@@ -111,26 +110,33 @@
                 </button>
             </div>
 
-            <!-- Insta Image Area -->
+            <!-- Insta Image Area (photo1.jpg 적용 완료) -->
             <div class="relative bg-zinc-950 aspect-square flex items-center justify-center overflow-hidden border-b border-zinc-900">
-                <!-- 📸 photo1.jpg 이미지 연결 부분 -->
                 <img src="photo1.jpg" alt="황실 종묘제례 공식 사진" class="w-full h-full object-cover" 
                      onerror="this.onerror=null; this.src='https://placehold.co/600x600/18181b/ffffff?text=photo1.jpg+Image+Here';">
             </div>
 
-            <!-- Insta Interactive Bar -->
-            <div class="p-3 pb-2 flex justify-between items-center text-xl">
-                <div class="flex space-x-4">
-                    <button class="hover:text-rose-500 text-rose-500 transition"><i class="fa-solid fa-heart"></i></button>
-                    <button class="hover:text-zinc-400 transition"><i class="fa-regular fa-comment"></i></button>
-                    <button class="hover:text-zinc-400 transition"><i class="fa-regular fa-paper-plane"></i></button>
+            <!-- Insta Interactive Bar (아이콘 + 수치 반응 반영) -->
+            <div class="px-3.5 pt-3 pb-1 flex justify-between items-center text-sm font-semibold text-zinc-300">
+                <div class="flex items-center space-x-4">
+                    <button class="flex items-center space-x-1.5 hover:text-rose-500 transition text-rose-500">
+                        <i class="fa-solid fa-heart text-base"></i>
+                        <span class="text-xs">1.1만</span>
+                    </button>
+                    <button class="flex items-center space-x-1.5 hover:text-zinc-400 transition">
+                        <i class="fa-regular fa-comment text-base"></i>
+                        <span class="text-xs">2,121</span>
+                    </button>
+                    <button class="flex items-center space-x-1.5 hover:text-zinc-400 transition">
+                        <i class="fa-regular fa-paper-plane text-base"></i>
+                        <span class="text-xs">1,321</span>
+                    </button>
                 </div>
-                <button class="hover:text-zinc-400 transition"><i class="fa-regular fa-bookmark"></i></button>
+                <button class="hover:text-zinc-400 transition text-base"><i class="fa-regular fa-bookmark"></i></button>
             </div>
 
-            <!-- Insta Likes & Text Body -->
-            <div class="px-3.5 pb-4 text-xs space-y-2 overflow-y-auto no-scrollbar">
-                <div class="font-bold text-zinc-200">좋아요 110,492개</div>
+            <!-- Insta Text Body -->
+            <div class="px-3.5 pb-4 pt-1 text-xs space-y-2 overflow-y-auto no-scrollbar">
                 <div class="leading-relaxed text-zinc-300 font-normal whitespace-pre-line">
 <span class="font-bold text-white mr-1.5">theImperialHouse_KR</span>병오년(丙午年) 설을 맞이하여 황제·황후 폐하와 황태자·태자비 전하께서는 종묘를 대행하시어 역대 선왕들께 국태민안을 기원하셨습니다. 
 
@@ -138,7 +144,8 @@
 
 아울러 동절기 건강 유의하시어 희망찬 새해의 기운을 이어가시길 기원합니다.
                 </div>
-                <div class="text-[10px] text-zinc-500 tracking-tight pt-1">2026년 2월 17일 · 공식 브리핑</div>
+                <!-- 날짜 기입 부분 (21분 전) -->
+                <div class="text-[10px] text-zinc-500 tracking-tight pt-1">21분 전</div>
             </div>
 
         </div>
@@ -146,9 +153,6 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // ----------------------------------------------------
-        // DALGL DATA
-        // ----------------------------------------------------
         const dalglData = {
             1: {
                 title: "오늘자 설 종묘 제례 생중계 달글 1",
@@ -300,19 +304,16 @@
         let streamIndex = 0;
         let streamTimer = null;
 
-        // 페이지 로드 시작
         window.onload = () => {
             switchDalgl(1);
             startLiveUserCounter();
         };
 
-        // 달글 탭 전환
         function switchDalgl(num) {
             currentDalgl = num;
             streamIndex = 0;
             if (streamTimer) clearInterval(streamTimer);
 
-            // 탭 스타일 업데이트
             [1, 2, 3].forEach(n => {
                 const btn = document.getElementById(`tab${n}`);
                 if (n === num) {
@@ -322,16 +323,13 @@
                 }
             });
 
-            // 헤더 & 공지 변경
             const dalgl = dalglData[num];
             document.getElementById('threadTitle').innerText = dalgl.title;
             document.getElementById('threadNotice').innerHTML = `<span class="truncate">${dalgl.notice}</span><span class="text-[10px] text-zinc-500 flex-shrink-0 ml-2">실시간 화력 최상</span>`;
 
-            // 댓글 컨테이너 리셋
             const container = document.getElementById('commentContainer');
             container.innerHTML = '';
 
-            // ⚡️ 고속 폭풍 스크림 (500ms 간격으로 빠르게 계속 쏘기)
             streamTimer = setInterval(() => {
                 if (streamIndex >= dalgl.comments.length) {
                     clearInterval(streamTimer);
@@ -342,12 +340,10 @@
                 appendCommentUI(item);
                 streamIndex++;
 
-                // 자동 스크롤 하단 유지
                 container.scrollTop = container.scrollHeight;
-            }, 500); // 🚀 초고속 속도 설정
+            }, 500); 
         }
 
-        // 댓글 HTML 엘리먼트 생성 및 추가
         function appendCommentUI(item, isUser = false) {
             const container = document.getElementById('commentContainer');
             const div = document.createElement('div');
@@ -382,7 +378,6 @@
             container.appendChild(div);
         }
 
-        // 대댓글 클릭 시 원본 댓글 위치로 자연스럽게 이동 + 하이라이트
         function scrollToReply(targetId) {
             const el = document.getElementById(`comment-${targetId}`);
             if (el) {
@@ -394,7 +389,6 @@
             }
         }
 
-        // 유저 직접 댓글 작성
         function postUserComment() {
             const input = document.getElementById('userCommentInput');
             const val = input.value.trim();
@@ -413,7 +407,6 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        // 실시간 인원수 요동치는 연출
         function startLiveUserCounter() {
             const el = document.getElementById('userCountNum');
             setInterval(() => {
@@ -423,7 +416,6 @@
             }, 2500);
         }
 
-        // 인스타그램 모달 열기/닫기
         function openInstaModal() {
             document.getElementById('instaModal').classList.remove('hidden');
         }
