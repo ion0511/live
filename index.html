@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘자 설 종묘 제례 생중계 달글</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #0f0f10; color: #e1e1e6; font-family: 'Apple SD Gothic Neo', sans-serif; }
+        .comment-enter { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex justify-center min-h-screen pb-24">
+
+    <div class="w-full max-w-[500px] border-x border-zinc-800 bg-[#121214] flex flex-col min-h-screen">
+        
+        <!-- 헤더 -->
+        <header class="p-4 border-b border-zinc-800 sticky top-0 bg-[#121214]/90 backdrop-blur z-10 flex justify-between items-center">
+            <div>
+                <span class="text-xs text-red-500 font-bold tracking-wider">● LIVE 방송 달글</span>
+                <h1 class="text-base font-bold text-white mt-0.5">오늘자 설 종묘 제례 생중계 달글</h1>
+            </div>
+            <span id="liveCount" class="text-xs bg-zinc-800 px-2 py-1 rounded text-zinc-400">14,291명 참여 중</span>
+        </header>
+
+        <!-- 본문 공지/안내 -->
+        <div class="p-3 bg-zinc-900/60 text-xs text-zinc-400 border-b border-zinc-800">
+            오늘 황태자 부부도 나온다고 백번 말한다 그만 좀 물어봐ㅡㅡ
+        </div>
+
+        <!-- 댓글 피드 -->
+        <div id="commentContainer" class="p-4 space-y-3 text-sm flex-1">
+            <!-- 초기 댓글들이 들어갑니다 -->
+            <div class="py-1"><span class="font-bold text-zinc-300">익명 125</span> <span class="text-zinc-200 ml-1">니네 차례 안지냄? 일단 우리집은 세배 미뤄두고 다 이거 보고 있음</span></div>
+            <div class="py-1 pl-3 border-l-2 border-zinc-700 text-zinc-300"><span class="font-bold text-zinc-400">익명 126</span> <span class="text-xs text-indigo-400 mr-1">@125</span> 안 지냄 황실에서 대신 지내주는데 왜 지냄</div>
+        </div>
+
+        <!-- 하단 입력창 -->
+        <div class="fixed bottom-0 w-full max-w-[500px] bg-[#18181b] p-3 border-t border-zinc-800 flex items-center space-x-2 z-20">
+            <input type="text" id="userComment" placeholder="달글에 댓글 남기기..." class="flex-1 bg-zinc-900 text-sm text-white px-3 py-2 rounded-lg border border-zinc-700 focus:outline-none focus:border-indigo-500">
+            <button onclick="addUserComment()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-lg transition">등록</button>
+        </div>
+
+    </div>
+
+    <script>
+        // 자동으로 차례차례 업로드될 댓글 데이터
+        const autoComments = [
+            { id: 127, replyTo: 125, text: "우리집도ㅋㅋ 할머니가 이거 보겠다고 먼저 대기하심" },
+            { id: 128, replyTo: 126, text: "니네 조상이냐고ㅋㅋㅋㅋㅋ" },
+            { id: 129, text: "아 언제 시작함?" },
+            { id: 130, text: "와 오늘 개추운데 존나 춥겠다" },
+            { id: 131, text: "사람 존나 많다 저기" },
+            { id: 132, text: "나온다 지금" },
+            { id: 135, text: "황제 황후 지나감 뒤에 황태자랑 태자비 나옴" },
+            { id: 136, text: "오시온 오늘 표정 왜 저래? 누가 보면 종묘 부수러 온 줄" },
+            { id: 137, text: "비궁 마마 독감이었다더니 얼굴 좀 상했네... 근데 이쁘다" },
+            { id: 138, text: "오시온 표정 봨ㅋㅋㅋ 진짜 기분 안 좋아 보이네 비궁 아파서 예민한가?" },
+            { id: 142, text: "야 황태자 아까부터 비궁 비틀거릴 때마다 손 움찔거리는 거 나만 보임?ㅋㅋㅋ" },
+            { id: 143, replyTo: 142, text: "나도 봄ㅋㅋㅋ 잡아주고 싶은데 상황이 저래서 참는건가" },
+            { id: 145, text: "비궁 독감 때문에 3일 동안 의식 없었다며? 완전 멀쩡해 보이는데?" }
+        ];
+
+        let index = 0;
+        const container = document.getElementById('commentContainer');
+
+        // 2초마다 댓글 1개씩 자동 추가되는 타이머
+        const interval = setInterval(() => {
+            if (index >= autoComments.length) {
+                clearInterval(interval);
+                return;
+            }
+
+            const item = autoComments[index];
+            const div = document.createElement('div');
+            div.className = "py-1 comment-enter";
+
+            if (item.replyTo) {
+                div.className += " pl-3 border-l-2 border-zinc-700 text-zinc-300";
+                div.innerHTML = `<span class="font-bold text-zinc-400">익명 ${item.id}</span> <span class="text-xs text-indigo-400 mr-1">@${item.replyTo}</span> ${item.text}`;
+            } else {
+                div.innerHTML = `<span class="font-bold text-zinc-300">익명 ${item.id}</span> <span class="text-zinc-200 ml-1">${item.text}</span>`;
+            }
+
+            container.appendChild(div);
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            index++;
+        }, 2200);
+
+        // 사용자가 직접 댓글 작성
+        function addUserComment() {
+            const input = document.getElementById('userComment');
+            const val = input.value.trim();
+            if (!val) return;
+
+            const div = document.createElement('div');
+            div.className = "py-1 bg-indigo-950/40 p-2 rounded border border-indigo-500/30 comment-enter";
+            div.innerHTML = `<span class="font-bold text-indigo-400">익명 (나)</span> <span class="text-white ml-1">${val}</span>`;
+
+            container.appendChild(div);
+            input.value = '';
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
